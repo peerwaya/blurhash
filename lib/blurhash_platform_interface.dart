@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'dart:ui' as ui;
 
 import 'blurhash_method_channel.dart';
 
@@ -28,7 +29,12 @@ abstract class BlurHashPlatform extends PlatformInterface {
     throw UnimplementedError('encode() has not been implemented.');
   }
 
-  Future<Uint8List?> decode(String blurHash, int width, int height,
+  Future<Uint8List> decode(String blurHash, int width, int height,
+      {double punch = 1.0, bool useCache = true}) {
+    throw UnimplementedError('decode() has not been implemented.');
+  }
+
+  Future<ui.Image> toImage(String blurHash, int width, int height,
       {double punch = 1.0, bool useCache = true}) {
     throw UnimplementedError('decode() has not been implemented.');
   }

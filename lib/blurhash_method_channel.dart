@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
+import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 
 import 'blurhash_platform_interface.dart';
@@ -21,7 +24,7 @@ class MethodChannelBlurHash extends BlurHashPlatform {
   }
 
   @override
-  Future<Uint8List?> decode(String blurHash, int width, int height,
+  Future<Uint8List> decode(String blurHash, int width, int height,
       {double punch = 1.0, bool useCache = true}) async {
     final Uint8List pixels =
         await methodChannel.invokeMethod('blurHashDecode', <String, dynamic>{
@@ -32,5 +35,16 @@ class MethodChannelBlurHash extends BlurHashPlatform {
       "useCache": useCache
     });
     return pixels;
+  }
+
+  @override
+  Future<ui.Image> toImage(String blurHash, int width, int height,
+      {double punch = 1.0, bool useCache = true}) async {
+    final completer = Completer<ui.Image>();
+    final Uint8List pixels =
+        await decode(blurHash, width, height, punch: punch, useCache: useCache);
+    ui.decodeImageFromPixels(
+        pixels, width, height, ui.PixelFormat.rgba8888, completer.complete);
+    return completer.future;
   }
 }

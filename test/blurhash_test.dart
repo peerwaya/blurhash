@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:ui' as ui;
 import 'package:blurhash/blurhash_method_channel.dart';
 import 'package:blurhash/blurhash_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,9 +15,20 @@ class MockBlurHashPlatform
       Future.value('');
 
   @override
-  Future<Uint8List?> decode(String blurHash, int width, int height,
+  Future<Uint8List> decode(String blurHash, int width, int height,
           {double punch = 1.0, bool useCache = true}) =>
       Future.value(Uint8List(0));
+
+  @override
+  Future<ui.Image> toImage(String blurHash, int width, int height,
+      {double punch = 1.0, bool useCache = true}) async {
+    final completer = Completer<ui.Image>();
+    final Uint8List pixels =
+        await decode(blurHash, width, height, punch: punch, useCache: useCache);
+    ui.decodeImageFromPixels(
+        pixels, width, height, ui.PixelFormat.rgba8888, completer.complete);
+    return completer.future;
+  }
 }
 
 void main() {
