@@ -44,7 +44,7 @@ class MethodChannelBlurHash extends BlurHashPlatform {
     final Uint8List pixels =
         await decode(blurHash, width, height, punch: punch, useCache: useCache);
     ui.decodeImageFromPixels(
-        pixels, width, height, ui.PixelFormat.rgba8888, completer.complete);
+        pixels, width, height, ui.PixelFormat.bgra8888, completer.complete);
     return completer.future;
   }
 }
